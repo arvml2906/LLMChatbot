@@ -13,7 +13,10 @@ For installing the requirements for this software, please run the following:
  ```
  pip install -r requirements.txt
  ```
-  
+
+## Local Chatbot
+To run a chatbot on the terminal on your local machine, copy the files from the ```LocalChatbot``` folder on your local machine,place them all in the same repository, execute ```python generator.py```. The model class is in ```gpt_model.py``` and the trained model weights are in ```trained_model.pth```.
+
 ## Dataset
 The dataset used for training the model is the ```binary_operation_fine_shuffled_file.csv``` , a self-generated file consisting of binary computations for numbers 1 to 20( addition, subtraction, multiplication, division).
 ## Paper Reference
