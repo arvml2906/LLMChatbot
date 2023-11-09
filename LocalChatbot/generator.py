@@ -6,20 +6,28 @@ with open('binary_operation_fine_shuffled_file.csv', 'r', encoding='utf-8') as f
     text = f.read()
 chars = sorted(list(set(text)))
 
-stoi = { ch:i for i,ch in enumerate(chars) }
-itos = { i:ch for i,ch in enumerate(chars) }
-encode = lambda s: [stoi[c] for c in s] # encoder: take a string, output a list of integers
-decode = lambda l: ''.join([itos[i] for i in l]) # decoder: take a list of integers, output a string
+stoi = {ch: i for i, ch in enumerate(chars)}
+itos = {i: ch for i, ch in enumerate(chars)}
+# encoder: take a string, output a list of integers
+def encode(s): return [stoi[c] for c in s]
+# decoder: take a list of integers, output a string
+def decode(l): return ''.join([itos[i] for i in l])
+
 
 def generate_prompt_response(prompt, model, max_new_tokens):
 
     model.eval()
     input_tokens = encode(prompt)
-    context = torch.tensor(input_tokens, dtype=torch.long, device=device).unsqueeze(0)
-    generated_tokens = model.generate(context, max_new_tokens=max_new_tokens)[0].tolist()
+    context = torch.tensor(
+        input_tokens,
+        dtype=torch.long,
+        device=device).unsqueeze(0)
+    generated_tokens = model.generate(
+        context, max_new_tokens=max_new_tokens)[0].tolist()
     generated_response = decode(generated_tokens)
 
-    # Use regular expression to match the answer format (e.g., "3+4=7"or "3x4=12")
+    # Use regular expression to match the answer format (e.g., "3+4=7"or
+    # "3x4=12")
     match = re.search(r'\d+\s*([-+\/xX])\s*\d+\s*=\s*\d+', generated_response)
     if match:
         answer = match.group(0)
@@ -42,6 +50,6 @@ while True:
     max_new_tokens = 15  # Maximum number of tokens in the generated response
 
     # Generate response based on the prompt
-    generated_response = generate_prompt_response(prompt, trained_model, max_new_tokens)
+    generated_response = generate_prompt_response(
+        prompt, trained_model, max_new_tokens)
     print(f"Input Prompt: {prompt}\nGenerated Response: {generated_response}")
-
